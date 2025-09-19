@@ -1,5 +1,5 @@
 const IMAGE_COUNT = 30;
-const IMAGE_FOLDER = "images/";
+const IMAGE_FOLDER = "Images/";
 const PANEL_IMAGE = "login_panel/panel.png";
 const GRID_ROWS = 4;
 const GRID_COLUMNS = 5; // includes login panel
