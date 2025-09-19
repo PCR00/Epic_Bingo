@@ -1,72 +1,58 @@
-const IMAGE_COUNT = 30;
-const IMAGE_FOLDER = "Images/";
-const PANEL_IMAGE = "login_panel/panel.png";
-const GRID_ROWS = 4;
-const GRID_COLUMNS = 5; // includes login panel
-const TILE_SIZE = 150;
+document.addEventListener("DOMContentLoaded", () => {
+  const IMAGE_FOLDER = "Images/";
+  const PANEL_IMAGE = "login_panel/panel.png";
+  const TOTAL_IMAGES = 30;
+  const NUM_SQUARES = 16;
 
-function getRandomImages(count) {
-  const indices = Array.from({ length: IMAGE_COUNT }, (_, i) => i + 1);
-  const selected = [];
-
-  while (selected.length < count) {
-    const idx = Math.floor(Math.random() * indices.length);
-    selected.push(indices.splice(idx, 1)[0]);
+  function getRandomImages() {
+    let selected = [];
+    while (selected.length < NUM_SQUARES) {
+      let num = Math.floor(Math.random() * TOTAL_IMAGES) + 1;
+      if (!selected.includes(num)) {
+        selected.push(num);
+      }
+    }
+    return selected.map(num => `${IMAGE_FOLDER}login${num}.png`);
   }
 
-  return selected.map(num => `${IMAGE_FOLDER}login${num}.png`);
-}
+  function createBingoBoard() {
+    const board = document.getElementById("bingo-board");
+    if (!board) {
+      console.error("Element with id 'bingo-board' not found.");
+      return;
+    }
+    board.innerHTML = "";
 
-function cropStyle(row, column) {
-  let xShift = column < 2 ? 0 : 66.66; // left or right third
-  let yShift = row < 2 ? 0 : 50;       // top or bottom half
+    const imageSources = getRandomImages();
 
-  return `
-    object-fit: cover;
-    width: 300%;
-    height: 200%;
-    transform: translateX(-${xShift}%) translateY(-${yShift}%);
-  `;
-}
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
+        const square = document.createElement("div");
+        square.classList.add("bingo-square");
 
-function buildBoard() {
-  const container = document.getElementById("bingo-container");
-  container.innerHTML = "";
-
-  const images = getRandomImages(16);
-  let imageIndex = 0;
-
-  for (let row = 0; row < GRID_ROWS; row++) {
-    for (let col = 0; col < GRID_COLUMNS; col++) {
-      if (col === 2) {
-        if (row === 0) {
-          // Insert login panel
-          const panel = document.createElement("div");
-          panel.id = "login-panel";
+        // Insert the login panel in column 2.5 (i.e., col == 2), across rows 0–3
+        if (col === 2) {
+          const panel = document.createElement("img");
+          panel.src = PANEL_IMAGE;
+          panel.classList.add("login-panel");
+          // Only add once at row 0, and span 4 rows
+          if (row === 0) {
+            square.style.gridRow = "span 4";
+            square.style.gridColumn = "3"; // 1-based index in CSS Grid
+            square.appendChild(panel);
+            board.appendChild(square);
+          }
+        } else {
+          const imgIndex = row * 4 + col - (col > 2 ? 1 : 0); // Skip panel column
           const img = document.createElement("img");
-          img.src = PANEL_IMAGE;
-          panel.appendChild(img);
-          container.appendChild(panel);
+          img.src = imageSources[imgIndex];
+          square.appendChild(img);
+          board.appendChild(square);
         }
-        continue; // skip this cell on other rows (login panel spans vertically)
       }
-
-      const tile = document.createElement("div");
-      tile.classList.add("bingo-tile");
-
-      const img = document.createElement("img");
-      img.src = images[imageIndex++];
-      img.style = cropStyle(row, col);
-
-      tile.appendChild(img);
-      tile.addEventListener("click", () => {
-        tile.classList.toggle("marked");
-      });
-
-      container.appendChild(tile);
     }
   }
-}
 
-document.getElementById("reset-button").addEventListener("click", buildBoard);
-window.onload = buildBoard;
+  document.getElementById("reset-button").addEventListener("click", createBingoBoard);
+  createBingoBoard();
+});
