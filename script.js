@@ -1,6 +1,6 @@
 const IMAGE_COUNT = 30;  // Total number of images you have
 const BOARD_SIZE = 4;    // 4x4 grid = 16 total
-const IMAGE_FOLDER = "images/";
+const IMAGE_FOLDER = "Images/";
 
 function getRandomImages(count) {
   const indices = Array.from({ length: IMAGE_COUNT }, (_, i) => i + 1);
