@@ -1,60 +1,61 @@
-const bingoBoard = document.getElementById('bingo-board');
-const loginImageSrc = 'login_panel/panel.png';
+const IMAGE_COUNT = 30;  // Total number of images you have
+const BOARD_SIZE = 4;    // 4x4 grid = 16 total
+const IMAGE_FOLDER = "Images/";
 
-function getImageList() {
-  const images = [];
-  for (let i = 1; i <= 24; i++) {
-    images.push(`Images/login${i}.png`);
+function getRandomImages(count) {
+  const indices = Array.from({ length: IMAGE_COUNT }, (_, i) => i + 1);
+  const selected = [];
+
+  while (selected.length < count) {
+    const idx = Math.floor(Math.random() * indices.length);
+    selected.push(indices.splice(idx, 1)[0]);
   }
-  return images;
+
+  return selected.map(num => `${IMAGE_FOLDER}login${num}.png`);
 }
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
-function createBoard() {
-  bingoBoard.innerHTML = '';
-
-  const imageList = getImageList();
-  shuffle(imageList);
-  const selectedImages = imageList.slice(0, 16);
-
-  let imgIndex = 0;
-  for (let row = 0; row < 4; row++) {
-    for (let col = 0; col < 5; col++) {
-      // Column 2.5 — place login panel
-      if (col === 2) {
-        if (row === 0) {
-          const loginPanel = document.createElement('div');
-          loginPanel.id = 'login-panel';
-          const img = document.createElement('img');
-          img.src = loginImageSrc;
-          loginPanel.appendChild(img);
-          bingoBoard.appendChild(loginPanel);
-        }
-        // Skip rows 1–3 for login slot (row-spanning behavior)
-        continue;
-      }
-
-      const tile = document.createElement('div');
-      tile.className = 'bingo-tile';
-
-      const img = document.createElement('img');
-      img.src = selectedImages[imgIndex];
-      img.alt = `Login background ${imgIndex + 1}`;
-
-      tile.appendChild(img);
-      tile.addEventListener('click', () => tile.classList.toggle('marked'));
-
-      bingoBoard.appendChild(tile);
-      imgIndex++;
-    }
+function cropStyle(column) {
+if (column < 2) {
+    // Columns 1 and 2: show the left third
+    return `
+      object-fit: cover;
+      width: 300%;
+      height: 100%;
+      transform: translateX(0%);
+    `;
+  } else {
+    // Columns 3 and 4: show the right third
+    return `
+      object-fit: cover;
+      width: 300%;
+      height: 100%;
+      transform: translateX(-66.66%);
+    `;
   }
 }
 
-document.getElementById('reset-button').addEventListener('click', createBoard);
-createBoard();
+function buildBoard() {
+  const board = document.getElementById("bingo-board");
+  board.innerHTML = ""; // Clear previous board
+  const images = getRandomImages(16);
+
+  images.forEach((imgSrc, idx) => {
+    const square = document.createElement("div");
+    square.classList.add("bingo-square");
+    const column = idx % BOARD_SIZE;
+
+    const img = document.createElement("img");
+    img.src = imgSrc;
+    img.style = cropStyle(column);
+
+    square.appendChild(img);
+    square.addEventListener("click", () => {
+      square.classList.toggle("marked");
+    });
+
+    board.appendChild(square);
+  });
+}
+
+document.getElementById("reset-button").addEventListener("click", buildBoard);
+window.onload = buildBoard;
