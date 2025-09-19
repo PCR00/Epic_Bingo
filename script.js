@@ -15,9 +15,23 @@ function getRandomImages(count) {
 }
 
 function cropStyle(column) {
-  return column < 2
-    ? "clip-path: inset(0 50% 0 0);"
-    : "clip-path: inset(0 0 0 50%);";
+if (column < 2) {
+    // Columns 1 and 2: show the left third
+    return `
+      object-fit: cover;
+      width: 300%;
+      height: 100%;
+      transform: translateX(0%);
+    `;
+  } else {
+    // Columns 3 and 4: show the right third
+    return `
+      object-fit: cover;
+      width: 300%;
+      height: 100%;
+      transform: translateX(-66.66%);
+    `;
+  }
 }
 
 function buildBoard() {
