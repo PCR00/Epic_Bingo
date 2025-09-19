@@ -36,25 +36,42 @@ if (column < 2) {
 
 function buildBoard() {
   const board = document.getElementById("bingo-board");
-  board.innerHTML = ""; // Clear previous board
+  board.innerHTML = "";
   const images = getRandomImages(16);
+  let imageIndex = 0;
 
-  images.forEach((imgSrc, idx) => {
-    const square = document.createElement("div");
-    square.classList.add("bingo-square");
-    const column = idx % BOARD_SIZE;
+  for (let row = 1; row <= 4; row++) {
+    for (let col = 1; col <= 5; col++) {
+      if (row === 2 && col === 3) {
+        // Add the login panel tile
+        const panel = document.createElement("div");
+        panel.className = "panel-tile";
 
-    const img = document.createElement("img");
-    img.src = imgSrc;
-    img.style = cropStyle(column);
+        const panelImg = document.createElement("img");
+        panelImg.src = "Images/login_panel/panel.png";
 
-    square.appendChild(img);
-    square.addEventListener("click", () => {
-      square.classList.toggle("marked");
-    });
+        panel.appendChild(panelImg);
+        board.appendChild(panel);
+      } else {
+        // Regular bingo tile
+        const square = document.createElement("div");
+        square.className = "bingo-square";
 
-    board.appendChild(square);
-  });
+        const img = document.createElement("img");
+        img.src = images[imageIndex++];
+        img.style = cropStyle(col - 1);  // column is 1-indexed
+
+        square.appendChild(img);
+        square.addEventListener("click", () => {
+          square.classList.toggle("marked");
+        });
+
+        board.appendChild(square);
+      }
+    }
+  }
+
+
 }
 
 document.getElementById("reset-button").addEventListener("click", buildBoard);
