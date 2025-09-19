@@ -11,7 +11,7 @@ function getRandomImages(count) {
     selected.push(indices.splice(idx, 1)[0]);
   }
 
-  return selected.map(num => `${IMAGE_FOLDER}login${num}.jpg`);
+  return selected.map(num => `${IMAGE_FOLDER}login${num}.png`);
 }
 
 function cropStyle(column) {
