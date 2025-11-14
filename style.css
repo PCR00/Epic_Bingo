@@ -59,7 +59,7 @@ h1 {
 .panel-tile {
   grid-column: 3;       /* middle column */
   grid-row: 1 / 5;      /* span rows 1 through 4 (end index is exclusive) */
-  width: 150px;
+  width: 100%;   /* fill the grid column */
   height: 100%;
   overflow: hidden;
   position: relative;
