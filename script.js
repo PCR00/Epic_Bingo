@@ -37,42 +37,44 @@ if (column < 2) {
 function buildBoard() {
   const board = document.getElementById("bingo-board");
   board.innerHTML = "";
+
+  // 1) Add the login panel once, in the middle column
+  const panel = document.createElement("div");
+  panel.className = "panel-tile";
+
+  const panelImg = document.createElement("img");
+  panelImg.src = "Images/login_panel/panel.png"; // make sure this path exists
+
+  panel.appendChild(panelImg);
+  board.appendChild(panel);
+
+  // 2) Add the 16 bingo tiles
   const images = getRandomImages(16);
-  let imageIndex = 0;
 
-  for (let row = 1; row <= 4; row++) {
-    for (let col = 1; col <= 5; col++) {
-      if (row === 2 && col === 3) {
-        // Add the login panel tile
-        const panel = document.createElement("div");
-        panel.className = "panel-tile";
+  images.forEach((imgSrc, idx) => {
+    const square = document.createElement("div");
+    square.className = "bingo-square";
 
-        const panelImg = document.createElement("img");
-        panelImg.src = "Images/login_panel/panel.png";
+    const img = document.createElement("img");
+    img.src = imgSrc;
 
-        panel.appendChild(panelImg);
-        board.appendChild(panel);
-      } else {
-        // Regular bingo tile
-        const square = document.createElement("div");
-        square.className = "bingo-square";
+    // Logical column: 0,1 (left side) or 2,3 (right side)
+    const logicalColumn = idx % BOARD_SIZE; // BOARD_SIZE = 4
+    img.style = cropStyle(logicalColumn);
 
-        const img = document.createElement("img");
-        img.src = images[imageIndex++];
-        img.style = cropStyle(col - 1);  // column is 1-indexed
+    square.appendChild(img);
 
-        square.appendChild(img);
-        square.addEventListener("click", () => {
-          square.classList.toggle("marked");
-        });
+    square.addEventListener("click", () => {
+      square.classList.toggle("marked");
+    });
 
-        board.appendChild(square);
-      }
-    }
-  }
-
-
+    board.appendChild(square);
+  });
 }
+
+
+
+
 
 document.getElementById("reset-button").addEventListener("click", buildBoard);
 window.onload = buildBoard;
