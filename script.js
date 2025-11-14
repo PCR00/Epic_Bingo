@@ -43,7 +43,7 @@ function buildBoard() {
   panel.className = "panel-tile";
 
   const panelImg = document.createElement("img");
-  panelImg.src = "Images/login_panel/panel.png"; // make sure this path exists
+ panelImg.src = "login_panel/panel.png"; // make sure this path exists
 
   panel.appendChild(panelImg);
   board.appendChild(panel);
