@@ -13,7 +13,7 @@ h1 {
 
 #bingo-board {
   display: grid;
-  grid-template-columns: repeat(5, 150px); /* 5 columns: 2 left, panel, 2 right */
+  grid-template-columns: 150px 150px 200px 150px 150px; /center column or the panel is a bit wider
   grid-template-rows: repeat(4, 150px);    /* 4 rows tall */
   grid-gap: 10px;
   justify-content: center;
