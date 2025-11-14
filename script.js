@@ -1,6 +1,31 @@
 const IMAGE_COUNT = 30;  // Total number of images you have
 const BOARD_SIZE = 4;    // 4x4 grid = 16 total
 const IMAGE_FOLDER = "Images/";
+// Fun synonyms for "epic" to use in the title
+const EPIC_SYNONYMS = [
+  "Legendary",
+  "Mythic",
+  "Heroic",
+  "Monumental",
+  "Colossal",
+  "Grand",
+  "Majestic",
+  "Titanic",
+  "Stupendous",
+  "Mythical",
+  "Gargantuan"
+];
+
+function setRandomTitle() {
+  const titleElement = document.getElementById("title");
+  if (!titleElement) return;
+
+  const word =
+    EPIC_SYNONYMS[Math.floor(Math.random() * EPIC_SYNONYMS.length)];
+
+  titleElement.textContent = `${word} Bingo`;
+}
+
 
 function getRandomImages(count) {
   const indices = Array.from({ length: IMAGE_COUNT }, (_, i) => i + 1);
@@ -35,6 +60,7 @@ if (column < 2) {
 }
 
 function buildBoard() {
+  setRandomTitle();  // update the heading each time the board is built
   const board = document.getElementById("bingo-board");
   board.innerHTML = "";
 
